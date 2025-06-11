@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ユーザー名設定 - オンラインチャットアプリ</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="auth-container">
+            <h2 id="auth-title">ユーザー名を設定</h2>
+            <form id="username-form">
+                <div class="input-group">
+                    <label for="username">ユーザー名</label>
+                    <input type="text" id="username" required>
+                    <p class="error-message" id="username-error">このユーザー名は既に使用されています。</p>
+                </div>
+                <button type="submit" id="username-button">設定する</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <script src="app.js"></script>
+    <script src="set-username.js"></script>
+</body>
+</html>
