@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Discord-like Chat</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js"></script>
+</head>
+<body>
+  <div id="app">
+    <aside class="sidebar">
+      <h2 class="logo">MyChat</h2>
+      <div class="channels">
+        <div class="channel active"># general</div>
+      </div>
+      <div class="user-panel" id="user-panel">
+        <!-- ログイン前はボタン、ログイン後はユーザー情報 -->
+      </div>
+    </aside>
+    <main class="chat-area">
+      <div id="messages" class="messages"></div>
+      <form id="message-form" class="message-form">
+        <input id="message-input" type="text" placeholder="メッセージを入力..." />
+        <button type="submit">送信</button>
+      </form>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
