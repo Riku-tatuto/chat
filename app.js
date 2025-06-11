@@ -1,102 +1,101 @@
-// Firebase 初期化
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.29.0/firebase-app.js";
-import {
-  getAuth,
-  signInWithPopup,
-  GoogleAuthProvider,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/11.29.0/firebase-auth.js";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  query,
-  orderBy,
-  onSnapshot,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/11.29.0/firebase-firestore.js";
-
+// Firebaseの設定
 const firebaseConfig = {
-  apiKey: "AIzaSyCQdnFMnR4UKZRjTYJYgM98StDklLssZOA",
-  authDomain: "online-chat-app-db.firebaseapp.com",
-  projectId: "online-chat-app-db",
-  storageBucket: "online-chat-app-db.firebasestorage.app",
-  messagingSenderId: "485166356040",
-  appId: "1:485166356040:web:1071fed931b12a9197aa7d"
+    apiKey: "AIzaSyCQdnFMnR4UKZRjTYJYgM98StDklLssZOA",
+    authDomain: "online-chat-app-db.firebaseapp.com",
+    projectId: "online-chat-app-db",
+    storageBucket: "online-chat-app-db.firebasestorage.app",
+    messagingSenderId: "485166356040",
+    appId: "1:485166356040:web:1071fed931b12a9197aa7d"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const provider = new GoogleAuthProvider();
+// Firebaseを初期化
+firebase.initializeApp(firebaseConfig);
 
-// DOM 要素の取得
-const userPanel = document.getElementById('user-panel');
-const messagesDiv = document.getElementById('messages');
-const messageForm = document.getElementById('message-form');
-const messageInput = document.getElementById('message-input');
+// Firebase認証サービスを取得
+const auth = firebase.auth();
 
-// 認証状態監視
-onAuthStateChanged(auth, user => {
-  userPanel.innerHTML = '';
-  if (user) {
-    const logoutBtn = document.createElement('button');
-    logoutBtn.textContent = 'ログアウト';
-    logoutBtn.onclick = () => signOut(auth);
-    userPanel.appendChild(logoutBtn);
-    loadMessages();
-  } else {
-    const googleBtn = document.createElement('button');
-    googleBtn.textContent = 'Google でログイン';
-    googleBtn.onclick = () => signInWithPopup(auth, provider);
-    const emailForm = document.createElement('form');
-    emailForm.innerHTML = `
-      <input type="email" id="email" placeholder="メールアドレス" required />
-      <input type="password" id="password" placeholder="パスワード" required />
-      <button type="submit">登録 / ログイン</button>
-    `;
-    emailForm.onsubmit = async e => {
-      e.preventDefault();
-      const email = emailForm.email.value;
-      const password = emailForm.password.value;
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-      } catch {
-        await signInWithEmailAndPassword(auth, email, password);
-      }
-    };
-    userPanel.append(googleBtn, emailForm);
-  }
+// DOM要素の取得
+const authForm = document.getElementById('auth-form');
+const authButton = document.getElementById('auth-button');
+const authTitle = document.getElementById('auth-title');
+const toggleText = document.getElementById('toggle-text');
+const toggleLink = document.getElementById('toggle-link');
+const googleSigninButton = document.getElementById('google-signin');
+const errorMessage = document.getElementById('error-message');
+
+// モード（ログインか登録か）
+let isLoginMode = true;
+
+// トグルリンクのクリックイベント
+toggleLink.addEventListener('click', () => {
+    isLoginMode = !isLoginMode;
+    if (isLoginMode) {
+        authTitle.textContent = 'ログイン';
+        authButton.textContent = 'ログイン';
+        toggleText.innerHTML = 'アカウントを持っていませんか？ <span id="toggle-link">新規登録</span>';
+    } else {
+        authTitle.textContent = '新規登録';
+        authButton.textContent = '登録';
+        toggleText.innerHTML = '既にアカウントを持っていますか？ <span id="toggle-link">ログイン</span>';
+    }
 });
 
-// メッセージ送信
-messageForm.addEventListener('submit', async e => {
-  e.preventDefault();
-  const user = auth.currentUser;
-  if (!user) return alert('ログインしてください');
-  await addDoc(collection(db, 'messages'), {
-    uid: user.uid,
-    author: user.displayName || user.email,
-    text: messageInput.value,
-    createdAt: serverTimestamp()
-  });
-  messageInput.value = '';
+// フォームの送信イベント
+authForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    if (isLoginMode) {
+        // ログイン処理
+        auth.signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // ログイン成功
+                const user = userCredential.user;
+                alert(`ようこそ、${user.email}さん！`);
+                // ここでチャットページにリダイレクトするなどの処理を追加
+            })
+            .catch((error) => {
+                errorMessage.textContent = error.message;
+            });
+    } else {
+        // 新規登録処理
+        auth.createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // 登録成功
+                const user = userCredential.user;
+                alert(`登録が完了しました、${user.email}さん！`);
+                // ここでチャットページにリダイレクトするなどの処理を追加
+            })
+            .catch((error) => {
+                errorMessage.textContent = error.message;
+            });
+    }
 });
 
-// リアルタイムメッセージ読み込み
-function loadMessages() {
-  const q = query(collection(db, 'messages'), orderBy('createdAt'));
-  onSnapshot(q, snapshot => {
-    messagesDiv.innerHTML = '';
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const div = document.createElement('div');
-      div.classList.add('message');
-      div.innerHTML = `<span class="author">${data.author}:</span> <span class="text">${data.text}</span>`;
-      messagesDiv.appendChild(div);
-    });
-  });
-}
+// Googleサインインの処理
+googleSigninButton.addEventListener('click', () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider)
+        .then((result) => {
+            // サインイン成功
+            const user = result.user;
+            alert(`ようこそ、${user.displayName}さん！`);
+            // ここでチャットページにリダイレクトするなどの処理を追加
+        })
+        .catch((error) => {
+            errorMessage.textContent = error.message;
+        });
+});
+
+// 認証状態の監視
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        // ユーザーがログインしている場合
+        console.log('ユーザーがログインしています:', user);
+        // チャットページにリダイレクトするなどの処理を追加
+    } else {
+        // ユーザーがログアウトしている場合
+        console.log('ユーザーがログアウトしています。');
+    }
+});
