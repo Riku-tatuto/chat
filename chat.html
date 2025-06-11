@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>チャット - オンラインチャットアプリ</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>チャットルーム</h1>
+        <!-- チャットインターフェースをここに追加 -->
+        <p>ここにチャット機能を実装してください。</p>
+    </div>
+    <script src="app.js"></script>
+    <script>
+        // 認証状態の監視
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // ユーザーがログインしている場合
+                const userRef = db.collection('users').doc(user.uid);
+                userRef.get().then((doc) => {
+                    if (doc.exists && doc.data().username) {
+                        console.log(`ようこそ、${doc.data().username}さん！`);
+                        // チャット機能の初期化をここに追加
+                    } else {
+                        // ユーザー名が設定されていない場合、ユーザー名設定ページにリダイレクト
+                        window.location.href = 'set-username.html';
+                    }
+                }).catch((error) => {
+                    console.error(error);
+                });
+            } else {
+                // ユーザーがログアウトしている場合、ログインページにリダイレクト
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+</html>
