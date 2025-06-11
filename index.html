@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Discord-like Chat</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js"></script>
+  <!-- Firebase SDK を ES モジュールとして読み込む際のバージョンを最新に更新 -->
+  <script type="module" src="https://www.gstatic.com/firebasejs/11.29.0/firebase-app.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/11.29.0/firebase-auth.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/11.29.0/firebase-firestore.js"></script>
 </head>
 <body>
   <div id="app">
@@ -26,7 +27,7 @@
       </form>
     </main>
   </div>
-  <!-- ES モジュールとして読み込む -->
+  <!-- メインのアプリロジックを ES モジュールとして読み込む -->
   <script type="module" src="app.js"></script>
 </body>
 </html>
