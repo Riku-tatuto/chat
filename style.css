@@ -1,0 +1,25 @@
+/* リセット */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #36393f; color: #dcddde; height: 100vh; overflow: hidden; }
+#app { display: flex; height: 100%; }
+
+/* サイドバー */
+.sidebar { width: 250px; background-color: #2f3136; display: flex; flex-direction: column; }
+.logo { padding: 20px; font-size: 24px; color: white; text-align: center; }
+.channels { flex: 1; overflow-y: auto; }
+.channel { padding: 10px 20px; cursor: pointer; }
+.channel.active, .channel:hover { background-color: #40444b; color: white; }
+.user-panel { padding: 10px; border-top: 1px solid #202225; }
+.user-panel button { width: 100%; padding: 10px; background-color: #7289da; border: none; border-radius: 4px; color: white; cursor: pointer; }
+
+/* チャットエリア */
+.chat-area { flex: 1; display: flex; flex-direction: column; }
+.messages { flex: 1; padding: 20px; overflow-y: auto; }
+.message-form { display: flex; padding: 10px; background-color: #40444b; }
+.message-form input { flex: 1; padding: 10px; border: none; border-radius: 4px; margin-right: 10px; }
+.message-form button { padding: 10px 20px; background-color: #7289da; border: none; border-radius: 4px; color: white; cursor: pointer; }
+
+/* メッセージ */
+.message { margin-bottom: 15px; }
+.message .author { font-weight: bold; margin-right: 5px; }
+.message .text { display: inline; }
