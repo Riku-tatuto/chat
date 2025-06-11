@@ -1,15 +1,31 @@
 // Firebase 初期化
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.29.0/firebase-app.js";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/11.29.0/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  onSnapshot,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/11.29.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCQdnFMnR4UKZRjTYJYgM98StDklLssZOA",
-  authDomain: "online-chat-app-db.firebaseapp.com",
-  projectId: "online-chat-app-db",
-  storageBucket: "online-chat-app-db.firebasestorage.app",
-  messagingSenderId: "485166356040",
-  appId: "1:485166356040:web:1071fed931b12a9197aa7d"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -17,7 +33,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-// DOM 要素
+// DOM 要素の取得
 const userPanel = document.getElementById('user-panel');
 const messagesDiv = document.getElementById('messages');
 const messageForm = document.getElementById('message-form');
@@ -38,9 +54,9 @@ onAuthStateChanged(auth, user => {
     googleBtn.onclick = () => signInWithPopup(auth, provider);
     const emailForm = document.createElement('form');
     emailForm.innerHTML = `
-      <input type=\"email\" id=\"email\" placeholder=\"メールアドレス\" required />
-      <input type=\"password\" id=\"password\" placeholder=\"パスワード\" required />
-      <button type=\"submit\">登録 / ログイン</button>
+      <input type="email" id="email" placeholder="メールアドレス" required />
+      <input type="password" id="password" placeholder="パスワード" required />
+      <button type="submit">登録 / ログイン</button>
     `;
     emailForm.onsubmit = async e => {
       e.preventDefault();
@@ -48,7 +64,7 @@ onAuthStateChanged(auth, user => {
       const password = emailForm.password.value;
       try {
         await createUserWithEmailAndPassword(auth, email, password);
-      } catch { /* ログイン済みならログイン試行 */
+      } catch {
         await signInWithEmailAndPassword(auth, email, password);
       }
     };
@@ -70,7 +86,7 @@ messageForm.addEventListener('submit', async e => {
   messageInput.value = '';
 });
 
-// メッセージ読み込み
+// リアルタイムメッセージ読み込み
 function loadMessages() {
   const q = query(collection(db, 'messages'), orderBy('createdAt'));
   onSnapshot(q, snapshot => {
@@ -79,7 +95,7 @@ function loadMessages() {
       const data = doc.data();
       const div = document.createElement('div');
       div.classList.add('message');
-      div.innerHTML = `<span class=\"author\">${data.author}:</span> <span class=\"text\">${data.text}</span>`;
+      div.innerHTML = `<span class="author">${data.author}:</span> <span class="text">${data.text}</span>`;
       messagesDiv.appendChild(div);
     });
   });
