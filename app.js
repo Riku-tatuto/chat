@@ -20,12 +20,12 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.29.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyCQdnFMnR4UKZRjTYJYgM98StDklLssZOA",
+  authDomain: "online-chat-app-db.firebaseapp.com",
+  projectId: "online-chat-app-db",
+  storageBucket: "online-chat-app-db.firebasestorage.app",
+  messagingSenderId: "485166356040",
+  appId: "1:485166356040:web:1071fed931b12a9197aa7d"
 };
 
 const app = initializeApp(firebaseConfig);
